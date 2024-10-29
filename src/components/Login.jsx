@@ -2,8 +2,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../features/userSlice';
+import { loginUser } from '../hooks/slice/userSlice';
 import { useNavigate } from 'react-router-dom';
+import FormInput from './FormInput';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -22,7 +23,6 @@ export default function Login() {
     dispatch(loginUser({
       email: data.email,
       firstName: data.email.split('@')[0],
-      // lastName: 'User',
       isAuthenticated: true
     }));
     navigate('/home');
@@ -34,25 +34,21 @@ export default function Login() {
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
         
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <input
-              type="email"
-              {...register('email')}
-              placeholder="Email"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-          </div>
+          <FormInput 
+            type="email"
+            register={register}
+            name="email"
+            error={errors.email}
+            placeholder="Email"
+          />
 
-          <div className="mb-6">
-            <input
-              type="password"
-              {...register('password')}
-              placeholder="Password"
-              className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
-          </div>
+          <FormInput 
+            type="password"
+            register={register}
+            name="password"
+            error={errors.password}
+            placeholder="Password"
+          />
 
           <button 
             type="submit"
